@@ -1,0 +1,49 @@
+@startuml
+
+interface WithdrawalHandler {
+    {abstract} Boolean WithdrawalRequest(Request)
+}
+
+' Definizione della classe astratta che implementa l'interfaccia
+abstract class WithdrawalRequestHandler {
+    ' Metodo per impostare il gestore superiore
+    void setSuperiorRequestHandler(WithdrawalRequestHandler)
+    ' Metodo astratto dichiarato dall'interfaccia
+    {abstract} Boolean WithdrawalRequest(Request)
+    ' Metodo per inoltrare la richiesta
+    void forwardWithdrawalRequest(Request)
+}
+
+' Definizione della classe Proxy che implementa l'interfaccia
+class WithdrawalProxy {
+    ' Lista di Response per il log delle richieste
+    List<Response> log
+    ' Costruttore che accetta un handler
+    WithdrawalProxy(WithdrawalHandler)
+    ' Implementazione del metodo dell'interfaccia
+    Boolean WithdrawalRequest(Request)
+}
+
+
+' Classi concrete che implementano la classe astratta WithdrawalRequestHandler
+class DefaultAmountHandler {
+    Boolean WithdrawalRequest(Request)
+}
+
+class CustomAmountHandler {
+    Boolean WithdrawalRequest(Request)
+}
+
+class BankAmountHandler {
+    Boolean WithdrawalRequest(Request)
+}
+
+' Relazioni di implementazione
+WithdrawalRequestHandler -up-|> WithdrawalHandler
+WithdrawalProxy -up-|> WithdrawalHandler
+
+DefaultAmountHandler -up-|> WithdrawalRequestHandler
+CustomAmountHandler -up-|> WithdrawalRequestHandler
+BankAmountHandler -up-|> WithdrawalRequestHandler
+
+@enduml
