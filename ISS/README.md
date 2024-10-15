@@ -1,4 +1,4 @@
-# Esercizi di Ingegneria del software 
+# Esercizi di Ingegneria e Sicurezza del software 
 I seguenti esercizi sono stati svolti utilizzando lo strumento [PlantUML](https://github.com/plantuml): 
 - [**Esercizio 1**](es1/README.md)
 - [**Esercizio 2**](es2/README.md)
