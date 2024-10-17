@@ -1,4 +1,4 @@
-### Consegna
+# Consegna
 
 Sviluppare un sistema di gestione di progetto, qui i dettagli:
 
@@ -24,16 +24,25 @@ Sviluppare un sistema di gestione di progetto, qui i dettagli:
 **Regole di Gestione Budgetaria:**
 - I responsabili di WP hanno la facoltà di gestire autonomamente il budget assegnato al loro WP, ma devono ottenere autorizzazione per spese che eccedono tale budget o per specifiche categorie di spesa come la mobilità del personale.
 
-### Risoluzione
-Supponiamo di avere una classe *Manager*, la quale include i ruoli:
-- ScientificManager
-- WpManager
+# Risoluzione
 
-Per rappresentare il progetto facciamo uso del design pattern *Composite*, in modo tale da strutturare il progetto nel seguente modo: 
+## Organigramma aziendale
+L'organigramma dell'azienda è gestito attraverso una **chain of responsability**, vi è l'interfaccia `Manager` implementata dalle classi concrete: 
+- `WpManager`, il quale ha la responsabilità di 
+  - gestire autonomamente il budget assegnato al proprio WP
+  - assegnare specifiche attività e sottotask ai membri del team del proprio WP
+- `ScientificManager`, il il quale ha la responsabilità di: 
+  - dirigere spese legate alla mobilità del personale
+  - aumentare il budget assegnato ai WP
+
+## Gerarchia di progetto
+Per rappresentare il progetto facciamo uso del design pattern **composite**, in modo tale da strutturare il progetto nel seguente modo: 
 *  Project, un component (quindi classe astratta) che dichiara il metodo concreto per 
 memorizzare i risultati del task in un db centralizzato (jorunaling). 
-   * WP (work package), che implementa la classe concreta project
+   * WP (work package), un composite che estende la classe astratta project
+     *  Task, un ulteriore composite che estende la classe astratta project
+        * AtomicTask, una leaf che estende la classe project 
+
+> *nota*: il motivo per cui task è stato splittato in Task e AtomicTask risiede nel fatto che un task può contnere altri sottotask, indichiamo quindi con AtomicTask un task per l'appunto **atomico**, perciò non potrà esere suddiviso in più sottotask 
 
 
-
-effettuare richieste di istanziamento del budget, 

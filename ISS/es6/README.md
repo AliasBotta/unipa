@@ -30,3 +30,7 @@ Per risolvere il problema del sistema di prelievo ATM, ho utilizzato due design 
    - Il **DefaultAmountHandler** verifica se l'importo richiesto è uno degli importi predefiniti. Se lo è, la richiesta viene processata immediatamente.
    - Se l'importo non è predefinito, la richiesta viene inoltrata al **CustomAmountHandler**, che permette di inserire un importo personalizzato, se rientra nei limiti.
    - Se l'importo supera i limiti definiti, la richiesta viene inoltrata al **BankAmountHandler**, che avvisa l'utente di recarsi in banca per completare l'operazione.
+
+# Correzioni
+
+Sistemare il proxy, poichè questo deve essere solamente un surrogato, mentre in realtà ciò che ho implementato è stato un decorator

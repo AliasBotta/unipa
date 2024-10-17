@@ -1,0 +1,57 @@
+@startuml
+
+' Interfaccia comune per gestire le richieste
+interface Manager {
+    {abstract} handleRequest(Request): Response
+    {abstract} setSuperiorManager(Manager): void
+}
+
+' Classe concreta WpManager che gestisce le richieste di gestione del WP
+class WpManager implements Manager{
+    ' Implementazione per gestire autonomamente il budget e assegnare attività 
+    handleRequest(Request): Response
+    setSuperiorManager(Manager): void
+}
+
+' Classe concreta ScientificManager che gestisce le spese di mobilità e il budget
+class ScientificManager implements Manager{
+    ' Implementazione per gestire spese di mobilità e aumentare il budget
+    handleRequest(Request): Response
+    setSuperiorManager(Manager): void
+}
+
+' Definizione della classe astratta Project
+abstract class Project {
+    ' Metodo concreto per memorizzare i risultati del task in un database centralizzato
+    void journalResults()
+}
+
+' Composite che estende la classe astratta Project
+class WP extends Project {
+    ' Elenco di sub-tasks o projects
+    List<Project> tasks
+    addTask(Project): void
+    removeTask(Project): void
+    journalResults(): void
+}
+
+' Ulteriore Composite che estende la classe astratta Project
+class Task extends Project {
+    ' Elenco di sub-tasks o atomic tasks
+    List<Project> subTasks
+    addTask(Project task): void
+    removeTask(Project task): void
+    journalResults(): void
+}
+
+' Leaf che estende la classe Project, rappresenta un task atomico
+class AtomicTask extends Project {
+    ' Implementazione specifica di un atomic task
+    journalResults(): void
+}
+
+' domanda: atomicTask non può includere addProject o addtask alla sua implementazione, quindi Project può dichiarare solo il metodo journalResults
+' una classe che estende una classe astratta deve implementare i metodi concreti? 
+' domanda2: come gestiamo il fatto che i WP possono avere come figli solo i task? e che i task non possono avere come figli i WP? 
+
+@enduml
