@@ -37,11 +37,11 @@ L'organigramma dell'azienda è gestito attraverso una **chain of responsability*
 
 ## Gerarchia di progetto
 Per rappresentare il progetto facciamo uso del design pattern **composite**, in modo tale da strutturare il progetto nel seguente modo: 
-*  Project, un component (quindi classe astratta) che dichiara il metodo concreto per 
+*  `Project`, un *component* (quindi classe astratta) che dichiara il metodo concreto per 
 memorizzare i risultati del task in un db centralizzato (jorunaling). 
-   * WP (work package), un composite che estende la classe astratta project
-     *  Task, un ulteriore composite che estende la classe astratta project
-        * AtomicTask, una leaf che estende la classe project 
+   * `WP` (work package), un *composite* che estende la classe astratta project
+     *  `Task`, un ulteriore *composite* che estende la classe astratta project
+        * `AtomicTask`, una *leaf* che estende la classe project 
 
 > *nota*: il motivo per cui task è stato splittato in Task e AtomicTask risiede nel fatto che un task può contnere altri sottotask, indichiamo quindi con AtomicTask un task per l'appunto **atomico**, perciò non potrà esere suddiviso in più sottotask 
 
