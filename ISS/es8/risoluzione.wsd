@@ -1,0 +1,75 @@
+@startuml
+
+' Definizione dell'interfaccia base Student
+interface Student {
+    {abstract} +followCourse(Course) : Boolean
+    {abstract} +takeExam(Exam): Boolean
+}
+
+' Implementazione concreta di Student
+class BasicStudent {
+    -matriculationNumber : String
+    -name : String
+    +followCourse(Course) : Boolean
+    +takeExam(Exam): Boolean
+}
+
+' Decorator astratto che implementa l'interfaccia Student
+abstract class StudentDecorator {
+    -decoratedStudent : Student
+    + followCourse(Course) : Boolean
+    + takeExam(Exam): Boolean
+}
+
+' Concrete Decorator per le responsabilità di Tutor
+class TutorDecorator {
+    + tutorResponsibilities() : void
+}
+
+' Concrete Decorator per le responsabilità di Demonstrator
+class DemonstratorDecorator {
+    -events : EventList
+    + demonstratorResponsibilities() : void
+    + printEvents() : EventList
+}
+
+' Concrete Decorator per le responsabilità dello Studente Laureando
+class GraduatingStudentDecorator {
+    + prepareFinalThesis() : void
+}
+
+' Aggiunta delle classi per gestire la lista degli eventi
+' Si assume di avere una classe Event
+class EventList {
+    -events : List<Event>
+    +createIterator() : Iterator<Event>
+}
+
+class EventIterator{
+    -current : int
+    -events : List<Event>
+    +hasNext() : boolean
+    +next() : Event
+}
+
+interface Iterator {
+    {abstract} + hasNext() : boolean
+    {abstract} + next() : Object
+
+}
+
+' Relazioni
+Student <|.. BasicStudent
+Student <|.. StudentDecorator
+StudentDecorator <|-- TutorDecorator
+StudentDecorator <|-- DemonstratorDecorator
+StudentDecorator <|-- GraduatingStudentDecorator
+' Relazioni di aggregazione
+' DemonstratorDecorator o-- EventList
+' EventList o-- EventIterator
+
+EventList --> EventIterator : creates
+
+Iterator <|..EventIterator
+
+@enduml
