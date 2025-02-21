@@ -1,0 +1,51 @@
+@startuml
+
+abstract class InteractableObject {
+    {field} #collidingBox : Rectangle
+    {field} #showInteractionWidget : boolean
+    {field} #interactableObjectController : InteractableObjectController
+
+    {method} +InteractableObject(box : Rectangle, showInteractionWidget : boolean)
+    {method} +getBox() : Rectangle
+    {method} +getShowInteractionWidget() : boolean
+    {method} {abstract} +interact(player : Player)
+}
+
+class Item {
+    {field} -name : String
+    {field} -texturePath : String
+    {field} -texture : Texture
+    {field} -dialog : Dialog
+
+    {method} +Item(name : String, dialogName : String, texturePath : String, \nbox : Rectangle, showInteractionWidget : boolean)
+    {method} -createPickupDialog(dialogName : String, onPick : Action) : Dialog
+    {method} +interact(player : Player)
+    {method} +addToInventory(onPick : Action)
+    {method} +removeFromInventory()
+    {method} +getTexture() : Texture
+    {method} +getName() : String
+}
+
+class Npc {
+    {field} -texture : Texture
+    {field} -idleAnimation : Animation<TextureRegion>[]
+    {field} -direction : Direction
+    {field} -collisionBox : Rectangle
+    {field} #loopingAnimation : boolean
+
+    {method} +Npc(texture : Texture, box : Rectangle, \nshowInteractionWidget : boolean, direction : Direction)
+    {method} +initializeAnimations(texture : Texture)
+    {method} +getBox() : Rectangle
+    {method} +getRenderBox() : Rectangle
+    {method} +interact(player : Player)
+    {method} +getIdleAnimation() : Animation<TextureRegion>
+    {method} +getFrame(stateTime : float) : TextureRegion
+    {method} +setDirection(direction : Direction)
+    {method} +getDirection() : Direction
+    {method} +getTexture() : Texture
+}
+
+Item --|> InteractableObject
+Npc --|> InteractableObject
+
+@enduml

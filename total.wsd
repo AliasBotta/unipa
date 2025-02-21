@@ -1,0 +1,259 @@
+@startuml
+
+title High-Level Design Diagram of the Project
+
+' ----------------------------------
+' SINGLETONS & FACADE
+' ----------------------------------
+
+class Dinner {
+  - batch : SpriteBatch
+  - shapeRenderer : ShapeRenderer
+  + create() : void
+  + setScreen(Screen) : void
+  ...
+}
+
+note as note_Dinner
+Dinner is the main LibGDX application class
+that sets and manages the current Screen.
+end note
+
+Dinner -down-> GameScreen : sets
+Dinner .. note_Dinner
+
+class GameScreen {
+  - pauseController : PauseController
+  - menuController : MenuController
+  - levelController : LevelController
+  + render(float) : void
+  + updateCameraAndRenderer() : void
+  ...
+}
+
+note as note_GameScreen
+GameScreen is the core in-game Screen.\nIt orchestrates:
+- Player input
+- Rendering
+- Pause & menu management
+- Level management
+end note
+
+GameScreen .. note_GameScreen
+
+' ----------------------------------
+' SINGLETON: LevelController
+' ----------------------------------
+class LevelController {
+  - currentLevel : String
+  - loadedLevels : Map<String, LevelState>
+  + setLevel(String) : void
+  + getCurrentLevel() : LevelState
+  + saveAllLevels() : void
+  {static} getLevelController() : LevelController
+}
+
+note as note_LevelController
+**LevelController** is a **Singleton**.\n
+It lazily manages and stores LevelState instances (MANY levels),
+and provides a facade to set or get the current level.
+end note
+
+LevelController .. note_LevelController
+
+GameScreen --> LevelController : uses
+LevelController --> LevelState : manages (many)
+
+abstract class LevelState {
+  + init() : void
+  + dispose() : void
+  + createMemento() : RoomMemento
+  ...
+}
+note right of LevelState
+Base class for each room/level.\n(Concrete classes omitted\nfor brevity)
+end note
+
+' ----------------------------------
+' SINGLETON: InteractableObjectController
+' ----------------------------------
+class InteractableObjectController {
+  + add(Item) : void
+  + add(Npc) : void
+  + checkInteractions(Rectangle) : boolean
+  + flush() : void
+  {static} getInteractableObjectController() : InteractableObjectController
+}
+
+note as note_IOC
+**InteractableObjectController** is a **Singleton**.\n
+Also works as a **Facade** for managing
+all items, NPCs, and other interactable objects.
+end note
+
+InteractableObjectController .. note_IOC
+
+' ----------------------------------
+' TEMPLATE METHOD: InteractableObject
+' ----------------------------------
+abstract class InteractableObject {
+  # collidingBox : Rectangle
+  # showInteractionWidget : boolean
+  + interact(Player) : void   ' Template Method
+}
+
+note as note_Interactable
+**Template Method**:\nInteractableObject defines a "interact" method,
+which subclasses override (Items, NPC).
+end note
+
+InteractableObject .. note_Interactable
+
+class Item extends InteractableObject {
+  - name : String
+  - texturePath : String
+  + addToInventory(Action) : void
+  ...
+}
+
+class Npc extends InteractableObject {
+  - direction : Direction
+  + setDirection(Direction) : void
+  ...
+}
+
+InteractableObjectController --> InteractableObject : manages
+InteractableObject <|-- Item
+InteractableObject <|-- Npc
+
+' ----------------------------------
+' SINGLETON: Player
+' ----------------------------------
+class Player {
+  - inventory : List<Item>
+  - playerDirection : PlayerDirection
+  + addItem(Item) : void
+  + removeItem(Item) : void
+  + saveState() : void
+  {static} getPlayer() : Player
+}
+
+note as note_Player
+**Player** is a **Singleton**.\nUsed throughout the code via Player.getPlayer().
+end note
+
+Player .. note_Player
+Player --> Item : "inventory uses"
+
+' ----------------------------------
+' STATE PATTERN: Menus
+' ----------------------------------
+class MenuScreen {
+  - menuController : MenuController
+  + render(float) : void
+  ...
+}
+
+class MenuController {
+  - currentMenu : MenuState
+  + changeState(MenuState) : void
+  + getStage() : Stage
+  ...
+}
+
+note as note_MenuController
+**MenuController** is a context for the **State** pattern.\n
+Depending on the current MenuState, it displays different UI.
+end note
+
+MenuController .. note_MenuController
+MenuScreen --> MenuController
+
+abstract class MenuState {
+  + getStage() : Stage
+  + drawTable(Table, float, float, float, float) : void
+  ...
+}
+note right of MenuState
+**State** (abstract).\nConcrete states: MainMenu, PauseMenu, etc.
+end note
+
+class MainMenu extends MenuState
+class PauseMenu extends MenuState
+class SaveMenu extends MenuState
+class SettingsMenu extends MenuState
+class CharacterSelectionMenu extends MenuState
+class ComputerMenu extends MenuState
+
+MenuController --> MenuState : "currentMenu"
+MenuState <|-- MainMenu
+MenuState <|-- PauseMenu
+MenuState <|-- SaveMenu
+MenuState <|-- SettingsMenu
+MenuState <|-- CharacterSelectionMenu
+MenuState <|-- ComputerMenu
+
+' ----------------------------------
+' MEMENTO PATTERN: SaveController + Mementos
+' ----------------------------------
+class SaveController {
+  - currentSlot : int
+  - currentData : GameData
+  + getOrLoadGameData() : GameData
+  + writeGameDataToDisk() : void
+  + saveAll() : boolean
+  {static} getInstance() : SaveController
+}
+
+note as note_SaveController
+**SaveController** is a **Singleton**.\n
+Acts as caretaker for the **Memento** pattern,\n
+storing Player, Rooms, and game progress as mementos.
+end note
+
+SaveController .. note_SaveController
+
+class PlayerMemento {
+  ...
+}
+class RoomMemento {
+  ...
+}
+class ProgressMemento {
+  ...
+}
+class NotebookMemento {
+  ...
+}
+class NpcDialogMemento {
+  ...
+}
+
+SaveController --> PlayerMemento
+SaveController --> RoomMemento
+SaveController --> ProgressMemento
+SaveController --> NotebookMemento
+SaveController --> NpcDialogMemento
+LevelState --> RoomMemento : "createMemento()"
+Player --> PlayerMemento : "saveState()"
+
+' ----------------------------------
+' FACADE-LIKE: AudioController
+' ----------------------------------
+class AudioController {
+  + playMusic(String, boolean) : void
+  + playSound(String, boolean) : void
+  + setMusicVolume(float) : void
+  + initializeMusic() : void
+  ...
+}
+
+note as note_Audio
+**AudioController** can be seen as a facade for music & sound management.
+end note
+
+AudioController .. note_Audio
+
+GameScreen --> AudioController : uses
+
+@enduml

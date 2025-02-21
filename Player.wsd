@@ -1,0 +1,37 @@
+@startuml
+class Player {
+    - static player : Player
+    ' - playerBox : Rectangle
+    ' - playerDirection : PlayerDirection
+    ' - inventory : List<Item>
+    ' - isVisible : boolean
+    ' - playerName : String
+    ' - gender : Character
+    ' - idleAnimation : Animation<TextureRegion>[]
+    ' - walkAnimation : Animation<TextureRegion>[]
+
+    + getPlayer : Player
+    ' + getBox() : Rectangle
+    ' + getPlayerDirection() : PlayerDirection
+    ' + setPlayerDirection(direction : PlayerDirection) : void
+    ' + getIdleAnimation(direction : PlayerDirection) : Animation<TextureRegion>
+    ' + getWalkAnimation(direction : PlayerDirection) : Animation<TextureRegion>
+    ' + addItem(item : Item) : void
+    ' + forEachItem(action : Consumer<Item>) : void
+    ' + removeItem(item : Item) : void
+    ' + containsItem(item : Item) : boolean
+    ' + setPosition(x : float, y : float, direction : PlayerDirection) : void
+    ' + setPosition(x : float, y : float) : void
+    ' + getPlayerName() : String
+    ' + setPlayerName(playerName : String) : void
+    ' + isVisible() : boolean
+    ' + setVisible(visible : boolean) : void
+    ' + getGender() : Character
+    ' + setGender(gender : Character) : void
+    ' + restoreState(memento : PlayerMemento) : void
+    ' + saveState() : void
+
+    - Player()
+    ' - initializeAnimations() : void
+}
+@enduml

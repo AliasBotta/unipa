@@ -1,0 +1,48 @@
+@startuml
+
+class Player {
+    - playerBox : Rectangle
+    - playerDirection : PlayerDirection
+    - inventory : List<Item>
+    - gender : Character
+    - playerName : String
+
+    + setPosition(x : float, y : float, playerDirection : PlayerDirection)
+    + addItem(item : Item)
+    + saveState()
+    + restoreState(memento : PlayerMemento)
+}
+
+class PlayerMemento {
+    - playerDirection : Player.PlayerDirection
+    - inventory : List<ItemMemento>
+    - xPosition : int
+    - yPosition : int
+    - gender : Character
+    - playerName : String
+
+    + getPlayerDirection() : Player.PlayerDirection
+    + getInventory() : List<ItemMemento>
+    + getXPosition() : int
+    + getYPosition() : int
+    + getGender() : Character
+    + getPlayerName() : String
+}
+
+class SaveController {
+    - currentData : GameData
+
+    + setPlayerState(playerState : PlayerMemento)
+    + getPlayerState() : PlayerMemento
+    + saveState()
+    + restoreState()
+}
+
+Player "1" -down-> "1" PlayerMemento : creates >
+SaveController "1" -right-> "1" PlayerMemento : manages >
+
+note right of Player : Originator
+note right of PlayerMemento : Memento
+note right of SaveController : Caretaker
+
+@enduml

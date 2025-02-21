@@ -1,0 +1,78 @@
+@startuml
+' class AudioController {
+'     - static ArrayList<Music> playlist
+'     - static Music currentMusic
+'     --
+'     + static void playMusic(int trackNumber)
+'     + static void setVolume(float volume)
+'     + static void pauseMusic()
+' }
+
+
+
+class MenuController {
+    - currentMenu: MenuState
+    + changeState(MenuState): void
+    + getStage(): Stage
+}
+
+abstract class MenuState {
+    ~ MenuController loader
+    - TextureAtlas atlas
+    - Skin skin
+    + MenuState(MenuController)
+    + abstract getStage(): Stage
+}
+
+class MainMenu {
+    - Stage stage
+    - Viewport viewport
+    - Dinner game
+    + MainMenu(MenuController)
+    + getStage(): Stage
+}
+
+' class OptionMenu {
+'     - Stage stage
+'     - Viewport viewport
+'     - MenuState backState
+'     + OptionMenu(MenuController, MenuState)
+'     + getStage(): Stage
+' }
+
+class SavesMenu {
+    - Stage stage
+    - Viewport viewport
+    - MenuState backState
+    + Dinner game 
+    + SaveMenu (MenuController, MenuState)
+    + getStage(): Stage
+}
+
+
+class SettingsMenu {
+    - Stage stage
+    - Viewport viewport
+    - MenuState backState
+    - Dinner game
+    + SettingsMenu(MenuController, MenuState)
+    + getStage(): Stage
+}
+
+
+class PauseMenu {
+    - Stage stage
+    - Viewport viewport
+    + Dinner game
+    + PauseMenu(MenuController)
+    + getStage(): Stage
+}
+
+
+
+MenuController --> MenuState
+MenuState <|-- MainMenu
+MenuState <|-- SettingsMenu
+MenuState <|-- SavesMenu
+MenuState <|-- PauseMenu
+@enduml

@@ -1,0 +1,89 @@
+@startuml
+' =======================
+' Pattern State - Componenti
+' =======================
+
+' State astratto
+abstract class MenuState {
+  - MenuController loader
+  - TextureAtlas atlas
+  - Skin skin
+  - float r
+  - float g
+  - float b
+  __
+  + MenuState(loader : MenuController)
+  + abstract Stage getStage()
+  + abstract Table getTable()
+  + void dispose()
+}
+
+' Stati concreti
+class MainMenu {
+  + MainMenu(loader : MenuController)
+  + Stage getStage()
+  + Table getTable()
+  + void dispose()
+}
+
+class ComputerMenu {
+  + ComputerMenu(loader : MenuController)
+  + Stage getStage()
+  + Table getTable()
+  + void dispose()
+}
+
+class CharacterSelectionMenu {
+  + CharacterSelectionMenu(loader : MenuController)
+  + Stage getStage()
+  + Table getTable()
+  + void dispose()
+}
+
+class SaveMenu {
+  + SaveMenu(loader : MenuController, backState : MenuState)
+  + Stage getStage()
+  + Table getTable()
+  + void dispose()
+}
+
+class SettingsMenu {
+  + SettingsMenu(loader : MenuController, backState : MenuState)
+  + Stage getStage()
+  + void dispose()
+}
+
+class PauseMenu {
+  + PauseMenu(loader : MenuController)
+  + Stage getStage()
+  + void dispose()
+}
+
+' Il Controller che funge da Context nel pattern state
+class MenuController {
+  - MenuState currentMenu
+  __
+  + MenuController()
+  + MenuController(menu : MenuState)
+  + void changeState(menu : MenuState)
+  + void addInputProcessor(stage : Stage)
+  + void removeInputProcessor(stage : Stage)
+  + Stage getStage()
+  + MenuState getCurrentMenu()
+}
+
+' =======================
+' Relazioni (Generalizzazioni e Associazioni)
+' =======================
+
+MenuState <|-- MainMenu
+MenuState <|-- ComputerMenu
+MenuState <|-- CharacterSelectionMenu
+MenuState <|-- SaveMenu
+MenuState <|-- SettingsMenu
+MenuState <|-- PauseMenu
+
+' MenuController utilizza il MenuState come stato corrente
+MenuController --> MenuState : currentMenu
+
+@enduml
